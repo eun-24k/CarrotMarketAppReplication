@@ -159,13 +159,13 @@ object PostDatabase {
     }
 
     // 닉네임을 가지고 해당 포스팅 정보 가져오는 함수
-    fun getPost(username: String): PostInfo? {
-        return totalPostData.find { it.userName == username }
+    fun getPost(username: String): PostInfo {
+        return totalPostData.find { it.userName == username }!!
     }
 
     // 포스팅 정보를 수정하는 함수
     fun editPostData(user: PostInfo) {
-        getPost(user.userName)?.let {
+        getPost(user.userName).let {
             it.image = user.image
             it.product = user.product
             it.info = user.info

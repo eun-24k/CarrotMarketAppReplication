@@ -4,31 +4,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.carrotmarketappreplication.data.PostDatabase.totalPostData
 import com.example.carrotmarketappreplication.data.PostInfo
 import com.example.carrotmarketappreplication.databinding.PostRecyclerviewBinding
+import java.text.DecimalFormat
 
-class PostAdapter(val mItems: ArrayList<PostInfo>) : RecyclerView.Adapter<PostAdapter.Holder>() {
+interface ItemClick {
+    fun onClick(view : View, position: Int)
+}
 
-    interface ItemClick {
-        fun onClick(view : View, position: Int)
-    }
+class PostAdapter(private val mItems: ArrayList<PostInfo>) : RecyclerView.Adapter<PostAdapter.Holder>() {
 
     var itemClick : ItemClick? = null
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = PostRecyclerviewBinding.inflate(LayoutInflater.from(parent.context),parent, false)
         return Holder(binding)
     }
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.itemView.setOnClickListener {
-            itemClick?.onClick(it, position)
+
+        holder.apply {
+            itemView.setOnClickListener {
+                itemClick?.onClick(it,adapterPosition)
+            }
+            with(totalPostData[adapterPosition]) {
+                val dec = DecimalFormat("#,###원")
+
+                postImage.setImageResource(this.image)
+                holder.product.text = this.product
+                holder.address.text = this.address
+                holder.price.text = dec.format(this.price).toString()
+                holder.commentCount.text = this.comments.toString()
+                holder.likesCount.text = this.likes.toString()
+            }
         }
-        holder.postImage.setImageResource(mItems[position].image)
-        holder.product.text = mItems[position].product
-        holder.address.text = mItems[position].address
-        holder.price.text = mItems[position].price.toString()
-        holder.commentCount.text = mItems[position].comments.toString()
-        holder.likesCount.text = mItems[position].likes.toString()
+
+
     }
 
     override fun getItemId(position: Int): Long {
@@ -47,4 +60,6 @@ class PostAdapter(val mItems: ArrayList<PostInfo>) : RecyclerView.Adapter<PostAd
         val likesCount = binding.tvLikesCount
         val commentCount = binding.tvCommentCount
     }
+
+
 }

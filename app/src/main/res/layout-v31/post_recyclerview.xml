@@ -18,50 +18,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/tvProduct"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:text="선풍기"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/postImage"
-        app:layout_constraintTop_toTopOf="parent"
-        android:maxLines="2"
-        android:ellipsize="end"/>
 
-    <TextView
-        android:id="@+id/tvAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:text="집주소"
-        android:textColor="@color/grey"
-        app:layout_constraintStart_toStartOf="@+id/tvProduct"
-        app:layout_constraintTop_toBottomOf="@+id/tvProduct" />
-
-    <TextView
-        android:id="@+id/tvPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:text="땡땡땡 원"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/tvAddress"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:gravity="top"
         android:orientation="vertical"
+        android:gravity="top"
         app:layout_constraintStart_toEndOf="@+id/postImage"
-        app:layout_constraintTop_toTopOf="@+id/postImage">
+        app:layout_constraintTop_toTopOf="@+id/postImage"
+        android:layout_marginStart="8dp">
 
+        <TextView
+            android:id="@+id/tvProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="선풍기"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginTop="0dp"
+            android:text="집주소"
+            android:textColor="@color/grey"/>
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="땡땡땡 원"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout

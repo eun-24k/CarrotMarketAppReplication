@@ -1,7 +1,11 @@
 package com.example.carrotmarketappreplication.data
 
+import android.os.Parcel
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 
+@Parcelize
 data class PostInfo(
     var index: Int,
     var image: Int,
@@ -12,4 +16,6 @@ data class PostInfo(
     var address: String,
     var likes: Int,
     var comments: Int
-)
+) : Parcelable {
+}
+
