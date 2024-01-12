@@ -2,13 +2,11 @@ package com.example.carrotmarketappreplication.activity
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -66,6 +64,8 @@ class MainActivity : AppCompatActivity() {
 
         initRecyclerView()
 
+        floatActionButton()
+
 
         // 상단 툴바 제거
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -95,12 +95,56 @@ class MainActivity : AppCompatActivity() {
                 activityResultLauncher.launch(intent)
             }
         }
+        adapter.itemLongClick = object : PostAdapter.ItemLongClick {
+            override fun onLongClick(view: View, position: Int) {
+                val ad = AlertDialog.Builder(this@MainActivity)
+                ad.setTitle("상품 삭제")
+                ad.setMessage("상품을 정말로 삭제하시겠습니까?")
+                ad.setPositiveButton("확인") { dialog, _ ->
+                    totalPostData.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                }
+                ad.setNegativeButton("취소"){ dialog,_ ->
+                    dialog.dismiss()
+                }
+                ad.show()
+            }
+        }
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val itemIndex = it.data?.getIntExtra("itemIndex", 0) as Int
             adapter.notifyItemChanged(itemIndex)
         }
 
+
+    }
+
+    private fun floatActionButton() {
+        val fadeIn = AlphaAnimation(0f, 1f).apply { duration = 500 }
+        val fadeOut = AlphaAnimation(1f, 0f).apply { duration = 500 }
+        var isTop = true
+
+        binding.recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!binding.recyclerView.canScrollVertically(-1)  // Scroll up & top
+                    && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    binding.fbScrollup.startAnimation(fadeOut)
+                    binding.fbScrollup.visibility = View.GONE
+                    isTop = true
+                } else {  // Scroll down....
+                    if(isTop) {
+                        binding.fbScrollup.visibility = View.VISIBLE
+                        binding.fbScrollup.startAnimation(fadeIn)
+                        isTop = false
+                    }
+                }
+            }
+        })
+
+        binding.fbScrollup.setOnClickListener {
+            binding.recyclerView.smoothScrollToPosition(0)
+        }
 
     }
 

@@ -13,10 +13,16 @@ import java.text.DecimalFormat
 
 class PostAdapter(private val mItems: ArrayList<PostInfo>) : RecyclerView.Adapter<PostAdapter.Holder>() {
 
-    var itemClick : ItemClick? = null
+
     interface ItemClick {
         fun onClick(view : View, position: Int)
     }
+    interface ItemLongClick {
+        fun onLongClick(view : View, position : Int)
+    }
+
+    var itemClick : ItemClick? = null
+    var itemLongClick : ItemLongClick? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -39,6 +45,11 @@ class PostAdapter(private val mItems: ArrayList<PostInfo>) : RecyclerView.Adapte
                 holder.commentCount.text = this.comments.toString()
                 holder.likesCount.text = this.likes.toString()
             }
+        }
+
+        holder.itemView.setOnLongClickListener() OnLongClickListener@{
+            itemLongClick?.onLongClick(it, position)
+            return@OnLongClickListener true
         }
 
 

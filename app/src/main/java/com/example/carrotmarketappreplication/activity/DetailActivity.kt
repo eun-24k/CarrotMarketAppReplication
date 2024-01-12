@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.example.carrotmarketappreplication.data.PostInfo
 import com.example.carrotmarketappreplication.databinding.ActivityDetailBinding
+import com.google.android.material.snackbar.Snackbar
 import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
@@ -51,6 +52,8 @@ class DetailActivity : AppCompatActivity() {
         binding.tvDetailAddress.text = post?.address
         binding.tvDetailPrice.text = DecimalFormat("#.###").format(post?.price).toString() + "원"
         binding.tvDetailDetail.text = post?.info
+
+
     }
 
 
