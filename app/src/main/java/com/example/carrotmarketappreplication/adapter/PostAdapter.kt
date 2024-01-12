@@ -9,14 +9,14 @@ import com.example.carrotmarketappreplication.data.PostInfo
 import com.example.carrotmarketappreplication.databinding.PostRecyclerviewBinding
 import java.text.DecimalFormat
 
-interface ItemClick {
-    fun onClick(view : View, position: Int)
-}
+
 
 class PostAdapter(private val mItems: ArrayList<PostInfo>) : RecyclerView.Adapter<PostAdapter.Holder>() {
 
     var itemClick : ItemClick? = null
-
+    interface ItemClick {
+        fun onClick(view : View, position: Int)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -27,15 +27,15 @@ class PostAdapter(private val mItems: ArrayList<PostInfo>) : RecyclerView.Adapte
 
         holder.apply {
             itemView.setOnClickListener {
-                itemClick?.onClick(it,adapterPosition)
+                itemClick?.onClick(it,position)
             }
-            with(totalPostData[adapterPosition]) {
-                val dec = DecimalFormat("#,###원")
+            with(totalPostData[position]) {
+                val dec = DecimalFormat("#,###")
 
                 postImage.setImageResource(this.image)
                 holder.product.text = this.product
                 holder.address.text = this.address
-                holder.price.text = dec.format(this.price).toString()
+                holder.price.text = dec.format(this.price).toString() + "원"
                 holder.commentCount.text = this.comments.toString()
                 holder.likesCount.text = this.likes.toString()
             }
@@ -52,7 +52,7 @@ class PostAdapter(private val mItems: ArrayList<PostInfo>) : RecyclerView.Adapte
         return mItems.size
     }
 
-    inner class Holder(val binding: PostRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class Holder(binding: PostRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root) {
         val postImage = binding.postImage
         val product = binding.tvProduct
         val address = binding.tvAddress

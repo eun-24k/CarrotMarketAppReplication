@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 data class PostInfo(
     var index: Int,
@@ -16,6 +15,5 @@ data class PostInfo(
     var address: String,
     var likes: Int,
     var comments: Int
-) : Parcelable {
-}
+) : Parcelable
 

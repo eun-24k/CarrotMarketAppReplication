@@ -13,12 +13,15 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AlphaAnimation
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.carrotmarketappreplication.MyDecoration
 import com.example.carrotmarketappreplication.R
-import com.example.carrotmarketappreplication.adapter.ItemClick
 import com.example.carrotmarketappreplication.adapter.PostAdapter
 import com.example.carrotmarketappreplication.data.PostDatabase.formDummyData
 import com.example.carrotmarketappreplication.data.PostDatabase.totalPostData
@@ -29,10 +32,10 @@ import com.example.carrotmarketappreplication.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val adapter by lazy {PostAdapter(arrayListOf())}
+//    private val adapter by lazy { PostAdapter(arrayListOf()) }
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
-
-
+    val adapter = PostAdapter(totalPostData)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -63,14 +66,6 @@ class MainActivity : AppCompatActivity() {
 
         initRecyclerView()
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            // 2. Custom 구분선
-            addItemDecoration(MyDecoration())
-        }
-
-
 
         // 상단 툴바 제거
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -80,30 +75,35 @@ class MainActivity : AppCompatActivity() {
 
         formDummyData()
 
-
-//
-//
-//        val adapter = PostAdapter(totalPostData)
-//        binding.recyclerView.adapter = adapter
-//        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-
-
     }
 
     private fun initRecyclerView() {
+
+        binding.recyclerView.adapter = adapter
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            // 2. Custom 구분선
+            addItemDecoration(MyDecoration())
+        }
 
-            adapter = PostAdapter(totalPostData).apply {
-                itemClick = object : ItemClick {
-                    override fun onClick(view: View, position: Int) {
-                        startActivity(DetailActivity.newIntent(this@MainActivity, totalPostData[position]))
-                    }
-                }
-
+        adapter.itemClick = object : PostAdapter.ItemClick {
+            override fun onClick(view: View, position: Int) {
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                intent.putExtra("item_index", position)
+                intent.putExtra("item_object", totalPostData[position])
+                activityResultLauncher.launch(intent)
             }
         }
+
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val itemIndex = it.data?.getIntExtra("itemIndex", 0) as Int
+            adapter.notifyItemChanged(itemIndex)
+        }
+
+
     }
+
     private fun notification() {
         binding.notificationButton.setOnClickListener {
             setNotice()
@@ -157,7 +157,6 @@ class MainActivity : AppCompatActivity() {
 
         manager.notify(11, builder.build())
     }
-
 
 
 }
